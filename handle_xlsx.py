@@ -32,7 +32,6 @@ def create_result_table(input_table: Workbook, group_size: int) -> Workbook:
         for row in range(1, group_size + 1): # fill table with ones
             cur_student_number = input_table.active.cell(row + 1, 3).value
             response_value = str(input_table.active.cell(row + 1, sheet + 3).value)
-            print(cur_student_number, " ", response_value)
             numbers = [int(x) for x in response_value.split()]
             for number in numbers:
                 new_sheet.cell(cur_student_number + 2, number + 2 ).value = 1
@@ -54,5 +53,3 @@ if __name__ == "__main__":
     # create_result_table(None, None)
     parsed = parse_xlsx(r"C:\Torrent\society_research\google_doc_table.xlsx")
     new = save_xlsx(parsed, r"C:\Users\user\Downloads\социометрия (Responses)2.xlsx")
-    for i in range (6):
-        print(i)
