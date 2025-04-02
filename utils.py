@@ -9,3 +9,4 @@ def valid_xlsx(path: str, exists=True):
     
     elif not any(path.endswith(ext) for ext in allowed_exts):
         raise ValueError(f"Allowed extensions: {allowed_exts}")
+

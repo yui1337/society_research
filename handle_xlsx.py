@@ -2,54 +2,78 @@
 from utils import valid_xlsx
 
 
-
-
 def parse_xlsx(path: str) -> Workbook:
+    """Table Parsing
+
+    Args:
+        path (str): path to table
+
+    Returns:
+        Workbook: loaded table
+    """
     valid_xlsx(path)
     return load_workbook(path)
 
 
-def create_result_table(input_table: Workbook, group_size: int) -> Workbook:
-    """
-    Creates table as described in technical task
-    :param input_table: Table from Google Forms, cleared from crap
-    :param group_size: Number of academical group members
-    :return: Table as described in technical task
+def create_result_table(input_table: Workbook, group_size: int, group_id: int) -> Workbook:
+    """Creates table as described in technical task
+
+    Args:
+        input_table (Workbook): Table from Google Forms, cleared from crap
+        group_size (int): Number of academical group members
+        group_id (int): Group ID, like 6114
+
+    Returns:
+        Workbook: Table as described in technical task
     """
     wb = Workbook()
     def_sheet = wb.active
     wb.remove(def_sheet) # delete default sheet
+
     for sheet in range(1,7): # create 6 sheets
         new_sheet = wb.create_sheet(title=f"Вопрос № {sheet}")
-        for j in range(1, group_size + 1): # create table NxN, N - group size
-            new_sheet.cell(j + 2, 2).value = j
-            new_sheet.cell(2, j + 2).value = j
+        new_sheet.cell(1, 1).value = group_id
 
-        for row in range(3, group_size + 3): # fill table with zeros
-            for col in range(3, group_size + 3):
+        for j in range(1, group_size + 1): # create table NxN, N - group size
+            new_sheet.cell(j + 1, 1).value = j
+            new_sheet.cell(1, j + 1).value = j
+
+        for row in range(2, group_size + 2): # fill table with zeros
+            for col in range(2, group_size + 2):
                 new_sheet.cell(row, col).value = 0
 
         for row in range(1, group_size + 1): # fill table with ones
             cur_student_number = input_table.active.cell(row + 1, 3).value
+            
+            if not isinstance(cur_student_number, int) or cur_student_number <= 0:
+                raise ValueError(f"Invalid student number at row {row + 1}")
+            
+            if cur_student_number > group_size:
+                continue
+
             response_value = str(input_table.active.cell(row + 1, sheet + 3).value)
-            numbers = [int(x) for x in response_value.split()]
+
+            try:
+                numbers = [int(x) for x in response_value.split() if int(x) <= group_size]
+            except ValueError:
+                raise ValueError(f"Invalid response value at row {row + 1}, sheet {sheet + 3}")
+
             for number in numbers:
-                new_sheet.cell(cur_student_number + 2, number + 2 ).value = 1
+                if not (1 <= number <= group_size):
+                    raise ValueError(f"Invalid response value '{number}' at row {row + 1}, sheet {sheet + 3}")
+                
+                new_sheet.cell(cur_student_number + 1, number + 1 ).value = 1
+
     return wb
 
 
 def save_xlsx(table: Workbook, path: str) -> None:
-    """
+    """_summary_
 
-    :param table:
-    :param path:
-    :return:
+    Args:
+        table (Workbook): Table
+        path (str): Saved path
     """
     valid_xlsx(path, exists=False)
     table.save(path)
 
-
-if __name__ == "__main__":
-    # create_result_table(None, None)
-    parsed = parse_xlsx(r"C:\Torrent\society_research\google_doc_table.xlsx")
-    new = save_xlsx(parsed, r"C:\Users\user\Downloads\социометрия (Responses)2.xlsx")
