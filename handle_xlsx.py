@@ -15,13 +15,13 @@ def parse_xlsx(path: str) -> Workbook:
     return load_workbook(path)
 
 
-def create_result_table(input_table: Workbook, group_size: int, group_id: int) -> Workbook:
+def create_result_table(input_table: Workbook, group_size: int, group_id: str) -> Workbook:
     """Creates table as described in technical task
 
     Args:
         input_table (Workbook): Table from Google Forms, cleared from crap
         group_size (int): Number of academical group members
-        group_id (int): Group ID, like 6114
+        group_id (str): Group ID, like 6114 or 6201-FIIT
 
     Returns:
         Workbook: Table as described in technical task
@@ -50,13 +50,13 @@ def create_result_table(input_table: Workbook, group_size: int, group_id: int) -
             
             if cur_student_number > group_size:
                 continue
-
-            response_value = str(input_table.active.cell(row + 1, sheet + 3).value)
+            value = input_table.active.cell(row + 1, sheet + 3).value
+            response_value = str(value) if value is not None else ""
 
             try:
                 numbers = [int(x) for x in response_value.split() if int(x) <= group_size]
             except ValueError:
-                raise ValueError(f"Invalid response value at row {row + 1}, sheet {sheet + 3}")
+                raise ValueError(f"Invalid response value at input table row {row + 1}, question {sheet}")
 
             for number in numbers:
                 if not (1 <= number <= group_size):

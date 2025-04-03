@@ -9,14 +9,13 @@ def parse_args() -> Namespace:
     parser.add_argument("input_xlsx", help="Path to input file")
     parser.add_argument("output_xlsx", help="Path to output file")
     parser.add_argument("group_size", type=int, help="Group size")
-    parser.add_argument("group_id", type=int, help="Grou ID")
+    parser.add_argument("group_id", type=str, help="Group ID")
 
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-
     table = parse_xlsx(args.input_xlsx)
     result_table = create_result_table(table, args.group_size, args.group_id)
     save_xlsx(result_table, args.output_xlsx)
