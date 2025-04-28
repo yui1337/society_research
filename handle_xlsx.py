@@ -51,15 +51,14 @@ def create_result_table(input_table: Workbook, group_size: int, group_id: str) -
             if cur_student_number > group_size:
                 continue
             value = input_table.active.cell(row + 1, sheet + 3).value
-            response_value = str(value) if value is not None else ""
-
+            response_value = str(value) if value is not(None or 0) else ""
             try:
                 numbers = [int(x) for x in response_value.split() if int(x) <= group_size]
             except ValueError:
                 raise ValueError(f"Invalid response value at input table row {row + 1}, question {sheet}")
 
             for number in numbers:
-                if not (0 <= number <= group_size):
+                if not (1 <= number <= group_size):
                     raise ValueError(f"Invalid response value '{number}' at row {row + 1}, sheet {sheet + 3}")
                 
                 new_sheet.cell(cur_student_number + 1, number + 1 ).value = 1
