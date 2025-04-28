@@ -59,7 +59,7 @@ def create_result_table(input_table: Workbook, group_size: int, group_id: str) -
                 raise ValueError(f"Invalid response value at input table row {row + 1}, question {sheet}")
 
             for number in numbers:
-                if not (1 <= number <= group_size):
+                if not (0 <= number <= group_size):
                     raise ValueError(f"Invalid response value '{number}' at row {row + 1}, sheet {sheet + 3}")
                 
                 new_sheet.cell(cur_student_number + 1, number + 1 ).value = 1
