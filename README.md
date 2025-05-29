@@ -6,7 +6,7 @@
 
 Пример:
 
-<code> python main.py "C:\Prog\society_research\google_doc_raw.xlsx" "C:\Prog\society_research\result_table.xlsx" 25 6114 </code>
+<code> python main.py "C:\...\society_research\google_doc_table.xlsx" "C:\...\society_research\result_table.xlsx" 25 6114 </code>
 
 Для корректной работы таблица ответов на форму(входные данные) должна иметь следующий вид: 
 ![image](https://github.com/user-attachments/assets/8027aaed-3bad-45b2-829e-31a1579b73b5)
